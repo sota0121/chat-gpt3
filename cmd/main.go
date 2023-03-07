@@ -23,6 +23,9 @@ func main() {
 	fmt.Println("OpenAI API Key: ", openaiApiKey)
 
 	// Invoke stream example
-	example.ExampleChatStream(openaiApiKey)
+	// example.ExampleChatStream(openaiApiKey)
+
+	// Invoke unary example
+	example.ExampleChat(openaiApiKey)
 
 }
