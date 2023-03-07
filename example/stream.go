@@ -11,9 +11,8 @@ import (
 )
 
 // ExampleChatStream is an example of how to use the stream API
-func ExampleChatStream(token string) {
+func ExampleChatStream(openaiClient *openai.Client) {
 	// Set up OpenAI client and prepare the stream
-	openaiClient := openai.NewClient(token)
 	ctx := context.Background()
 
 	req := openai.CompletionRequest{

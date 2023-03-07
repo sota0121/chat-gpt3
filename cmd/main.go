@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
+	"github.com/sashabaranov/go-openai"
 	"github.com/sota0121/chat-gpt3/example"
 )
 
@@ -20,12 +23,19 @@ func main() {
 
 	// Get OpenAI API Key
 	openaiApiKey := os.Getenv("OPENAI_API_KEY")
-	fmt.Println("OpenAI API Key: ", openaiApiKey)
+	hiddenApiKey := openaiApiKey[:4] + strings.Repeat("*", len(openaiApiKey)-4)
+	fmt.Println("OpenAI API Key: ", hiddenApiKey)
+
+	// Create OpenAI client only once
+	openaiClient := openai.NewClient(openaiApiKey)
 
 	// Invoke stream example
-	// example.ExampleChatStream(openaiApiKey)
+	// example.ExampleChatStream(openaiClient)
 
 	// Invoke unary example
-	example.ExampleChat(openaiApiKey)
+	fmt.Println("Start chat with GPT-3 (unary example)...")
+	s := bufio.NewScanner(os.Stdin)
+	s.Scan()
+	example.ExampleChat(openaiClient, s.Text())
 
 }

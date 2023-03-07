@@ -9,9 +9,10 @@ import (
 )
 
 // ExampleChatStream is an example of how to use the stream API
-func ExampleChat(token string) {
-	// Set up OpenAI client
-	openaiClient := openai.NewClient(token)
+func ExampleChat(openaiClient *openai.Client, input string) {
+	fmt.Println("in: ", input)
+
+	// Make a request
 	ctx := context.Background()
 
 	req := openai.ChatCompletionRequest{
@@ -19,7 +20,7 @@ func ExampleChat(token string) {
 		Messages: []openai.ChatCompletionMessage{
 			{
 				Role:    openai.ChatMessageRoleUser,
-				Content: "Hello! what's your name?",
+				Content: input,
 			},
 		},
 	}
