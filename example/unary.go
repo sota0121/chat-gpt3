@@ -31,5 +31,5 @@ func ExampleChat(openaiClient *openai.Client, input string) {
 		return
 	}
 
-	fmt.Printf("Response: %v\n", response)
+	fmt.Printf("Response Content: %v\n", response.Choices[0].Message.Content)
 }
