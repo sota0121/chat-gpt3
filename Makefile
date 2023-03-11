@@ -1,10 +1,10 @@
 .PHONY: build clean run test
 
-APP_NAME = "chatgpt3"
+APP_NAME = "gochat"
 
 build:
 	@echo "Building..."
-	@go build -o bin/$(APP_NAME) cmd/main.go
+	@go build -o bin/$(APP_NAME) cmd/*.go
 
 clean:
 	@echo "Cleaning..."
