@@ -82,6 +82,7 @@ func createOpenAIClient() (*openai.Client, error) {
 
 type App struct {
 	ctx            context.Context
+	CommandService application.CommandService
 	ChatService    application.ChatService
 	FindBugService application.FindBugService
 	TestGenService application.TestGenService
@@ -90,6 +91,7 @@ type App struct {
 func NewApp(ctx context.Context) *App {
 	return &App{
 		ctx:            ctx,
+		CommandService: application.NewCommandService(),
 		ChatService:    application.NewChatService(),
 		FindBugService: application.NewFindBugService(),
 		TestGenService: application.NewTestGenService(),
@@ -103,13 +105,30 @@ func (a *App) Execute() error {
 
 	// Process loop
 	for {
-		fmt.Println("chat> ")
+		fmt.Printf("chat> ")
 		s := bufio.NewScanner(os.Stdin)
 		s.Scan()
-		if s.Text() == ":quit" {
-			break
+
+		// Parse command
+		if strings.HasPrefix(s.Text(), ":") {
+			ct := a.CommandService.ParseCommand(s.Text())
+			switch ct {
+			case application.ShowHelp:
+				a.CommandService.ShowHelp()
+			case application.ShowVersion:
+				a.CommandService.ShowVersion()
+			case application.Quit:
+				fmt.Println("Bye!")
+				return nil
+			case application.TestGen:
+				// a.TestGenService.Execute(a.ctx) todo
+				fmt.Println("Not implemented yet")
+			case application.FindBugs:
+				// a.FindBugService.Execute(a.ctx) todo
+				fmt.Println("Not implemented yet")
+			}
+			continue
 		}
 		example.ExampleChat(openaiClient, s.Text())
 	}
-	return nil
 }

@@ -50,10 +50,16 @@ chat> :help
 Commands:
   :help
     Show this help message
-  :exit
-    Exit this chat
-  :analyze <file>
-    Analyze the source code of the file
-  :analyze <file> <function>
-    Analyze the source code of the function
+  :version
+    Show the version of this tool
+  :quit
+    Quit the chat
+  :findbugs <file>
+    Find bugs in the source code of the file
+  :findbugs <file> <function>
+    Find bugs in the source code of the function
+  :testgen <file>
+    Generate test cases for the file
+  :testgen <file> <function>
+    Generate test cases for the function
 ```
