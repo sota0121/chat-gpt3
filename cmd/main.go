@@ -120,8 +120,12 @@ func (a *App) Execute() error {
 				fmt.Println("Bye!")
 				return nil
 			case application.TestGen:
-				// a.TestGenService.Execute(a.ctx) todo
-				fmt.Println("Not implemented yet")
+				err := a.TestGenService.SendRequest(a.ctx, s.Text())
+				if err != nil {
+					slog.Error("Error sending request", err)
+					break
+				}
+
 			case application.FindBugs:
 				// a.FindBugService.Execute(a.ctx) todo
 				fmt.Println("Not implemented yet")

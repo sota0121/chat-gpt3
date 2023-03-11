@@ -1,6 +1,9 @@
 package application
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 const (
 	Version = "0.0.1"
@@ -77,7 +80,8 @@ var _ CommandService = (*commandService)(nil)
 // This method expects command starts with ':'
 // If command is not found, return ShowHelp
 func (c *commandService) ParseCommand(command string) CommandType {
-	cmdName := command[1:]
+	tokens := strings.Split(command, " ")
+	cmdName := tokens[0][1:]
 	switch cmdName {
 	case "help":
 		return ShowHelp
