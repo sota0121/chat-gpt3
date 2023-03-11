@@ -12,7 +12,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/sashabaranov/go-openai"
 	"github.com/sota0121/go-ai-chat/application"
-	"github.com/sota0121/go-ai-chat/example"
+	"github.com/sota0121/go-ai-chat/internal"
 	"golang.org/x/exp/slog"
 )
 
@@ -41,7 +41,7 @@ func main() {
 
 	// Create application
 	ctx := context.Background()
-	ctx = SetOpenAIClientToContext(ctx, openaiClient)
+	ctx = internal.SetOpenAIClientToContext(ctx, openaiClient)
 	app := NewApp(ctx)
 
 	// Start chat application
@@ -101,7 +101,6 @@ func NewApp(ctx context.Context) *App {
 // Execute executes application
 func (a *App) Execute() error {
 	fmt.Println("Please input text (or ':quit' to exit): ")
-	openaiClient := GetOpenAIClientFromContext(a.ctx)
 
 	// Process loop
 	for {
@@ -129,6 +128,6 @@ func (a *App) Execute() error {
 			}
 			continue
 		}
-		example.ExampleChat(openaiClient, s.Text())
+		a.ChatService.SendText(a.ctx, s.Text())
 	}
 }
