@@ -120,7 +120,7 @@ func (a *App) Execute() error {
 				fmt.Println("Bye!")
 				return nil
 			case application.TestGen:
-				err := a.TestGenService.SendRequest(a.ctx, s.Text())
+				err := a.TestGenService.SendRequestStream(a.ctx, s.Text())
 				if err != nil {
 					slog.Error("Error sending request", err)
 					break
