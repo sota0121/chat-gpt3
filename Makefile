@@ -1,12 +1,15 @@
-.PHONY: setup build clean run test xbuild
+.PHONY: setup build clean run test xbuild show-version upload-release-assets
 
 APP_NAME = "gochat"
-VERSION = "0.0.1"
+VERSION ?= $(shell git describe --tags)
 GOBIN ?= $(shell go env GOPATH)/bin
 ASSET_DIR = "dist"
 
 setup: $(GOBIN)/goxz $(GOBIN)/ghr $(GOBIN)/gobump
 	@echo "Setting up..."
+
+show-version:
+	@echo $(VERSION)
 
 build:
 	@echo "Building..."
