@@ -132,6 +132,6 @@ func (a *App) Execute() error {
 			}
 			continue
 		}
-		a.ChatService.SendText(a.ctx, s.Text())
+		a.ChatService.SendTextStream(a.ctx, s.Text())
 	}
 }
