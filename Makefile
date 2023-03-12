@@ -21,7 +21,7 @@ xbuild: $(GOBIN)/goxz
 
 upload-release-assets: $(GOBIN)/ghr
 	@echo "Uploading assets..."
-	@ghr "v$(VERSION)" $(ASSET_DIR)
+	@ghr "$(VERSION)" $(ASSET_DIR)
 
 clean:
 	@echo "Cleaning..."
