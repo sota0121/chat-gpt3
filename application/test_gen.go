@@ -31,7 +31,11 @@ type testGenService struct {
 var _ TestGenService = (*testGenService)(nil)
 
 const (
-	messageHeader = "以下のプログラムについて、テストコードを生成してください。"
+	messageHeader = `以下のプログラムについて、テストコードを生成してください。
+	テスト対象の関数の正常系と異常系のテストコードを生成してください。
+	テストコード生成には、 gomock を使用してください。
+	テストコードの形式は、AAA(Arrange, Act, Assert) に従ってください。
+	`
 )
 
 // SendRequest sends request to OpenAI to generate test code
