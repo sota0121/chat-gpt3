@@ -122,13 +122,15 @@ func (a *App) Execute() error {
 			case application.TestGen:
 				err := a.TestGenService.SendRequestStream(a.ctx, s.Text())
 				if err != nil {
-					slog.Error("Error sending request", err)
+					slog.Error("Error TestGenService.SendRequestStream", err)
 					break
 				}
-
 			case application.FindBugs:
-				// a.FindBugService.Execute(a.ctx) todo
-				fmt.Println("Not implemented yet")
+				err := a.FindBugService.SendRequestStream(a.ctx, s.Text())
+				if err != nil {
+					slog.Error("Error FindBugService.SendRequestStream", err)
+					break
+				}
 			}
 			continue
 		}
