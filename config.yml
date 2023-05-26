@@ -1,0 +1,4 @@
+commands:
+  chat:
+    systemMessages:
+      - "あなたは人生のプランニングのアドバイザーとして振る舞ってください。"

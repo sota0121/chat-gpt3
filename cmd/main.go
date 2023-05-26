@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,11 +15,22 @@ import (
 	"github.com/sota0121/go-ai-chat/application"
 	"github.com/sota0121/go-ai-chat/internal"
 	"golang.org/x/exp/slog"
+	yaml "gopkg.in/yaml.v2"
 )
+
+type Config struct {
+	Commands map[string]Command `yaml:commands`
+}
+
+type Command struct {
+	SystemMessages []string `yaml:systemMessages`
+}
 
 const (
 	envFileName         = ".env"
+	configFileName      = "config.yml"
 	openAiApiKeyEnvName = "OPENAI_API_KEY"
+	keyCommandsChat     = "chat"
 )
 
 func main() {
@@ -33,6 +45,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Load config file
+	cfg, err := loadConfig(filepath.Join(filepath.Dir(exec), configFileName))
+	if err != nil {
+		os.Exit(1)
+	}
+
 	// Create OpenAI client
 	openaiClient, err := createOpenAIClient()
 	if err != nil {
@@ -42,7 +60,7 @@ func main() {
 	// Create application
 	ctx := context.Background()
 	ctx = internal.SetOpenAIClientToContext(ctx, openaiClient)
-	app := NewApp(ctx)
+	app := NewApp(ctx, cfg)
 
 	// Start chat application
 	app.Execute()
@@ -60,6 +78,24 @@ func loadEnv(fileName string) error {
 		return err
 	}
 	return nil
+}
+
+// loadConfig loads config file
+func loadConfig(fileName string) (*Config, error) {
+	yamlFile, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		slog.Error("yamlFile.Get err   #%v ", err)
+		return nil, err
+	}
+
+	var config Config
+
+	err = yaml.Unmarshal(yamlFile, &config)
+	if err != nil {
+		slog.Error("Unmarshal: %v", err)
+		return nil, err
+	}
+	return &config, nil
 }
 
 // createOpenAIClient creates OpenAI client
@@ -82,17 +118,21 @@ func createOpenAIClient() (*openai.Client, error) {
 
 type App struct {
 	ctx            context.Context
+	config         *Config
 	CommandService application.CommandService
 	ChatService    application.ChatService
 	FindBugService application.FindBugService
 	TestGenService application.TestGenService
 }
 
-func NewApp(ctx context.Context) *App {
+func NewApp(ctx context.Context, cfg *Config) *App {
+	systemMessages := cfg.Commands[keyCommandsChat].SystemMessages
+
 	return &App{
 		ctx:            ctx,
+		config:         cfg,
 		CommandService: application.NewCommandService(),
-		ChatService:    application.NewChatService(),
+		ChatService:    application.NewChatService(systemMessages),
 		FindBugService: application.NewFindBugService(),
 		TestGenService: application.NewTestGenService(),
 	}
@@ -135,5 +175,6 @@ func (a *App) Execute() error {
 			continue
 		}
 		a.ChatService.SendTextStream(a.ctx, s.Text())
+		// a.ChatService.SendText(a.ctx, s.Text())
 	}
 }
