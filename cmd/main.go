@@ -19,11 +19,12 @@ import (
 )
 
 type Config struct {
-	Commands map[string]Command `yaml:commands`
+	Commands map[string]Command `yaml:"commands"`
 }
 
 type Command struct {
-	SystemMessages []string `yaml:systemMessages`
+	SystemMessages []string `yaml:"systemMessages"`
+	UserMessages   []string `yaml:"userMessages"`
 }
 
 const (
@@ -127,12 +128,13 @@ type App struct {
 
 func NewApp(ctx context.Context, cfg *Config) *App {
 	systemMessages := cfg.Commands[keyCommandsChat].SystemMessages
+	userMessages := cfg.Commands[keyCommandsChat].UserMessages
 
 	return &App{
 		ctx:            ctx,
 		config:         cfg,
 		CommandService: application.NewCommandService(),
-		ChatService:    application.NewChatService(systemMessages),
+		ChatService:    application.NewChatService(systemMessages, userMessages),
 		FindBugService: application.NewFindBugService(),
 		TestGenService: application.NewTestGenService(),
 	}

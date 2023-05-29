@@ -1,6 +1,7 @@
 .PHONY: setup build clean run test xbuild show-version upload-release-assets
 
 APP_NAME = "gochat"
+APP_NAME_AMD = "gochat-amd"
 VERSION ?= $(shell git describe --tags)
 GOBIN ?= $(shell go env GOPATH)/bin
 ASSET_DIR = "dist"
@@ -14,6 +15,7 @@ show-version:
 build:
 	@echo "Building..."
 	@go build -o bin/$(APP_NAME) cmd/*.go
+	GOOS=darwin GOARCH=amd64 go build -o bin/$(APP_NAME_AMD) cmd/*.go
 
 xbuild: $(GOBIN)/goxz
 	@echo "Cross building..."

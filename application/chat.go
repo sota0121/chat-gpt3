@@ -17,9 +17,8 @@ type ChatService interface {
 	SendTextStream(ctx context.Context, text string) error
 }
 
-func NewChatService(systemMessages []string) ChatService {
+func NewChatService(systemMessages, userMessages []string) ChatService {
 	systemMessageContents := make([]openai.ChatCompletionMessage, 0, len(systemMessages))
-
 	for _, msg := range systemMessages {
 		systemMessageContents = append(systemMessageContents, openai.ChatCompletionMessage{
 			Role:    openai.ChatMessageRoleSystem,
@@ -27,13 +26,23 @@ func NewChatService(systemMessages []string) ChatService {
 		})
 	}
 
+	userMessageContents := make([]openai.ChatCompletionMessage, 0, len(userMessages))
+	for _, msg := range userMessages {
+		userMessageContents = append(userMessageContents, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleUser,
+			Content: msg,
+		})
+	}
+
 	return &chatService{
 		SystemMessages: systemMessageContents,
+		UserMessages:   userMessageContents,
 	}
 }
 
 type chatService struct {
 	SystemMessages []openai.ChatCompletionMessage
+	UserMessages   []openai.ChatCompletionMessage
 	Histories      []openai.ChatCompletionMessage
 }
 
@@ -47,7 +56,8 @@ func (s *chatService) SendText(ctx context.Context, text string) error {
 		Content: text,
 	})
 
-	allMessages := append(s.SystemMessages, s.Histories...)
+	allMessages := append(s.SystemMessages, s.UserMessages...)
+	allMessages = append(allMessages, s.Histories...)
 
 	req := openai.ChatCompletionRequest{
 		Model:    openai.GPT3Dot5Turbo,
@@ -80,7 +90,8 @@ func (s *chatService) SendTextStream(ctx context.Context, text string) error {
 		Content: text,
 	})
 
-	allMessages := append(s.SystemMessages, s.Histories...)
+	allMessages := append(s.SystemMessages, s.UserMessages...)
+	allMessages = append(allMessages, s.Histories...)
 
 	req := openai.ChatCompletionRequest{
 		Model:    openai.GPT3Dot5Turbo,
