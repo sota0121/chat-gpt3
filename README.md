@@ -23,6 +23,8 @@ go install github.com/sota0121/go-ai-chat
 
 ## Configuration
 
+### Environment Variables
+
 You need to set the API key to the environment variable `OPENAI_API_KEY`.
 
 ```bash
@@ -33,6 +35,25 @@ OPENAI_API_KEY=<your API key> gochat
 echo "OPENAI_API_KEY=<your API key>" > .env
 gochat
 ```
+
+### Application Settings ( Optional )
+
+You can set the app configuration in YAML style.
+
+
+
+```yaml
+commands:
+  chat:
+    systemMessages: # Set the meta messages for handling AI behavior
+      - "ユーモラスに話してください。"
+    userMessages: # Set the messages in advance for handling AI
+      - "あなたは人生のプランニングのアドバイザーとして振る舞ってください。"
+      - "私に職業、年収、住んでいる地域、年齢、性別、趣味、結婚願望があるか、という情報を聞いてください。"
+      - "その上で、キャリアについて、プライベートの充実について、資産運用や経済面の問題について、アドバイスしてください。"
+
+```
+
 
 
 ## Usage
